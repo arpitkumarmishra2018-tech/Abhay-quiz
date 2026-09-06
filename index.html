@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABHAY // FILE 01</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    background:#070707;
+    color:#f4f1e8;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow:hidden;
+}
+
+
+/* =========================
+   NOISE / SCANLINES
+========================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:100;
+    opacity:.06;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 3px,
+            #fff 4px
+        );
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:101;
+
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 40%,
+            #000 130%
+        );
+}
+
+
+/* =========================
+   BACKGROUND GRID
+========================= */
+
+.grid{
+    position:fixed;
+    inset:0;
+    perspective:500px;
+    overflow:hidden;
+    z-index:-3;
+}
+
+.grid::before{
+    content:"";
+    position:absolute;
+
+    width:200%;
+    height:200%;
+
+    left:-50%;
+    top:20%;
+
+    background-image:
+        linear-gradient(#ffffff08 1px,transparent 1px),
+        linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+
+    background-size:60px 60px;
+
+    transform:
+        rotateX(62deg)
+        translateY(0);
+
+    animation:gridMove 5s linear infinite;
+}
+
+@keyframes gridMove{
+
+    to{
+        transform:
+            rotateX(62deg)
+            translateY(60px);
+    }
+
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:90px;
+    height:100vh;
+
+    border-right:1px solid #ffffff12;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:35px 0;
+
+    z-index:20;
+}
+
+.vertical{
+
+    writing-mode:vertical-rl;
+
+    font-size:10px;
+
+    letter-spacing:4px;
+
+    color:#777;
+
+}
+
+.index{
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.index span{
+
+    width:7px;
+    height:7px;
+
+    border:1px solid #777;
+
+    transform:rotate(45deg);
+
+    transition:.4s;
+
+}
+
+.index span.active{
+
+    background:#dfff00;
+
+    border-color:#dfff00;
+
+    box-shadow:
+        0 0 15px #dfff00;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+
+    position:fixed;
+
+    top:0;
+    left:90px;
+    right:0;
+
+    height:90px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 45px;
+
+    border-bottom:1px solid #ffffff12;
+
+    z-index:20;
+
+}
+
+.logo{
+
+    font-size:13px;
+
+    font-weight:900;
+
+    letter-spacing:5px;
+
+}
+
+.live{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:10px;
+
+    letter-spacing:3px;
+
+    color:#aaa;
+
+}
+
+.live-dot{
+
+    width:7px;
+    height:7px;
+
+    background:#dfff00;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 15px #dfff00;
+
+    animation:blink 1s infinite;
+
+}
+
+@keyframes blink{
+
+    50%{
+        opacity:.2;
+    }
+
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+
+    margin-left:90px;
+
+    height:100vh;
+
+    position:relative;
+
+}
+
+
+/* =========================
+   QUESTION SCREEN
+========================= */
+
+.screen{
+
+    position:absolute;
+
+    inset:90px 0 0;
+
+    padding:7vh 9vw;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    transition:
+        transform .7s cubic-bezier(.7,0,.2,1),
+        opacity .5s;
+
+}
+
+.screen.hidden{
+
+    transform:translateX(100%);
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+
+/* =========================
+   QUESTION NUMBER
+========================= */
+
+.number{
+
+    font-family:monospace;
+
+    color:#777;
+
+    font-size:13px;
+
+    letter-spacing:5px;
+
+    margin-bottom:35px;
+
+}
+
+.number strong{
+
+    color:#dfff00;
+
+}
+
+
+/* =========================
+   GIANT QUESTION
+========================= */
+
+.question{
+
+    max-width:1000px;
+
+    font-size:
+        clamp(42px,7vw,105px);
+
+    line-height:.91;
+
+    letter-spacing:-6px;
+
+    font-weight:900;
+
+}
+
+.question em{
+
+    color:#dfff00;
+
+    font-style:normal;
+
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.description{
+
+    margin-top:35px;
+
+    max-width:520px;
+
+    color:#777;
+
+    font-size:14px;
+
+    line-height:1.7;
+
+}
+
+
+/* =========================
+   SMALL ANSWER BUTTONS
+========================= */
+
+.answers{
+
+    margin-top:50px;
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+.answer{
+
+    position:relative;
+
+    width:auto;
+
+    min-width:85px;
+
+    padding:12px 18px;
+
+    border:1px solid #ffffff22;
+
+    background:#ffffff05;
+
+    color:#eee;
+
+    font-size:11px;
+
+    font-weight:900;
+
+    letter-spacing:1.5px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    overflow:hidden;
+
+}
+
+.answer::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    bottom:0;
+
+    width:100%;
+    height:2px;
+
+    background:#dfff00;
+
+    transform:scaleX(0);
+
+    transform-origin:left;
+
+    transition:.3s;
+
+}
+
+.answer:hover{
+
+    border-color:#dfff00;
+
+    transform:translateY(-3px);
+
+}
+
+.answer:hover::before{
+
+    transform:scaleX(1);
+
+}
+
+
+/* =========================
+   RUNAWAY BUTTON
+========================= */
+
+.runaway{
+
+    position:relative;
+
+    transition:
+        left .15s,
+        top .15s;
+
+}
+
+
+/* =========================
+   CORNER TEXT
+========================= */
+
+.corner{
+
+    position:absolute;
+
+    right:50px;
+    bottom:35px;
+
+    color:#555;
+
+    font-family:monospace;
+
+    font-size:10px;
+
+    letter-spacing:2px;
+
+}
+
+
+/* =========================
+   FINAL SCREEN
+========================= */
+
+.final{
+
+    position:absolute;
+
+    inset:90px 0 0;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:40px;
+
+}
+
+.final.active{
+
+    display:flex;
+
+    animation:finalIn 1s ease;
+
+}
+
+@keyframes finalIn{
+
+    from{
+        opacity:0;
+        transform:scale(.9);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+.final-number{
+
+    font-family:monospace;
+
+    color:#dfff00;
+
+    letter-spacing:6px;
+
+    font-size:12px;
+
+    margin-bottom:30px;
+
+}
+
+.final h1{
+
+    font-size:
+        clamp(60px,12vw,180px);
+
+    line-height:.8;
+
+    letter-spacing:-9px;
+
+    font-weight:900;
+
+}
+
+.final p{
+
+    margin:35px auto;
+
+    max-width:500px;
+
+    color:#777;
+
+    line-height:1.7;
+
+}
+
+.restart{
+
+    padding:12px 20px;
+
+    background:#dfff00;
+
+    color:#050505;
+
+    border:0;
+
+    font-size:11px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    letter-spacing:2px;
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+
+    position:fixed;
+
+    top:110px;
+    right:35px;
+
+    padding:14px 20px;
+
+    border:1px solid #dfff00;
+
+    background:#080808;
+
+    color:#dfff00;
+
+    font-family:monospace;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    transform:translateX(150%);
+
+    transition:.4s;
+
+    z-index:200;
+
+}
+
+.toast.show{
+
+    transform:translateX(0);
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    .sidebar{
+
+        width:55px;
+
+    }
+
+    header{
+
+        left:55px;
+
+        padding:0 20px;
+
+    }
+
+    main{
+
+        margin-left:55px;
+
+    }
+
+    .screen{
+
+        padding:7vh 7vw;
+
+    }
+
+    .question{
+
+        letter-spacing:-3px;
+
+        font-size:
+            clamp(40px,11vw,70px);
+
+    }
+
+    .answers{
+
+        flex-direction:row;
+
+        width:auto;
+
+    }
+
+    .answer{
+
+        width:auto;
+
+        min-width:80px;
+
+        align-self:flex-start;
+
+    }
+
+    .vertical{
+
+        display:none;
+
+    }
+
+    .corner{
+
+        right:20px;
+
+        bottom:20px;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="grid"></div>
+
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="vertical">
+        ABHAY // PERSONAL DATA
+    </div>
+
+    <div class="index">
+
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+    <div class="vertical">
+        2026
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="logo">
+        ABHAY / 01
+    </div>
+
+    <div class="live">
+
+        <div class="live-dot"></div>
+
+        TEST SESSION ACTIVE
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<!-- =========================
+     QUESTION 1
+========================= -->
+
+<section class="screen" id="screen0">
+
+    <div class="number">
+        FILE <strong>01</strong> / 05
+    </div>
+
+    <div class="question">
+
+        Do you like
+        <em>Abhay?</em>
+
+    </div>
+
+    <div class="description">
+
+        There is no correct answer.
+        Probably.
+
+    </div>
+
+    <div class="answers">
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            YES →
+
+        </button>
+
+        <button
+            class="answer runaway"
+            onmouseenter="escapeButton(this)"
+            ontouchstart="escapeButton(this)">
+
+            NO ✕
+
+        </button>
+
+    </div>
+
+    <div class="corner">
+        SUBJECT: ABHAY / STATUS: CONFIDENT
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION 2
+========================= -->
+
+<section class="screen hidden" id="screen1">
+
+    <div class="number">
+        FILE <strong>02</strong> / 05
+    </div>
+
+    <div class="question">
+
+        Do you have a
+        <em>crush</em> on Abhay?
+
+    </div>
+
+    <div class="description">
+
+        This question may cause
+        unnecessary levels of awkwardness.
+
+    </div>
+
+    <div class="answers">
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            YES →
+
+        </button>
+
+        <button
+            class="answer runaway"
+            onmouseenter="escapeButton(this)"
+            ontouchstart="escapeButton(this)">
+
+            NO ✕
+
+        </button>
+
+    </div>
+
+    <div class="corner">
+        CLASSIFICATION: TOP SECRET
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION 3
+========================= -->
+
+<section class="screen hidden" id="screen2">
+
+    <div class="number">
+        FILE <strong>03</strong> / 05
+    </div>
+
+    <div class="question">
+
+        Is your Spotify
+        Playlist better
+        than <em>Abhay?</em>
+
+    </div>
+
+    <div class="description">
+
+        Warning: Abhay may strongly disagree
+        with your answer.
+
+    </div>
+
+    <div class="answers">
+
+        <button
+            class="answer runaway"
+            onmouseenter="escapeButton(this)"
+            ontouchstart="escapeButton(this)">
+
+            YES →
+
+        </button>
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            NO ✕
+
+        </button>
+
+    </div>
+
+    <div class="corner">
+        AUDIO DATABASE / SPOTIFY
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION 4
+========================= -->
+
+<section class="screen hidden" id="screen3">
+
+    <div class="number">
+        FILE <strong>04</strong> / 05
+    </div>
+
+    <div class="question">
+
+        Would you tell Abhay
+        who is your
+        <em>crush?</em>
+
+    </div>
+
+    <div class="description">
+
+        Information security level:
+        absolutely questionable.
+
+    </div>
+
+    <div class="answers">
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            YES →
+
+        </button>
+
+        <button
+            class="answer runaway"
+            onmouseenter="escapeButton(this)"
+            ontouchstart="escapeButton(this)">
+
+            NO ✕
+
+        </button>
+
+    </div>
+
+    <div class="corner">
+        PRIVACY PROTOCOL / 04
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION 5
+========================= -->
+
+<section class="screen hidden" id="screen4">
+
+    <div class="number">
+        FILE <strong>05</strong> / 05
+    </div>
+
+    <div class="question">
+
+        Would you lend your
+        Spotify password to
+        <em>Abhay</em> for
+        listening music?
+
+    </div>
+
+    <div class="description">
+
+        Please 🥺🥺
+
+    </div>
+
+    <div class="answers">
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            YES →
+
+        </button>
+
+        <button
+            class="answer"
+            onclick="nextQuestion()">
+
+            NO ✕
+
+        </button>
+
+    </div>
+
+    <div class="corner">
+        FINAL SECURITY CHECK
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FINAL
+========================= -->
+
+<section class="final" id="final">
+
+    <div>
+
+        <div class="final-number">
+            FILE CLOSED // 05 OF 05
+        </div>
+
+        <h1>
+            DONE.
+        </h1>
+
+        <p>
+            The Abhay personality investigation has
+            officially concluded. Your answers have been
+            permanently stored in absolutely no database.
+        </p>
+
+        <button
+            class="restart"
+            onclick="restart()">
+
+            RUN AGAIN
+
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div
+    class="toast"
+    id="toast">
+
+    NICE TRY.
+
+</div>
+
+
+<script>
+
+let current = 0;
+
+const screens =
+document.querySelectorAll(".screen");
+
+const dots =
+document.querySelectorAll(".index span");
+
+const final =
+document.getElementById("final");
+
+const toast =
+document.getElementById("toast");
+
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion(){
+
+    screens[current].classList.add("hidden");
+
+    dots[current].classList.remove("active");
+
+    current++;
+
+    if(current >= screens.length){
+
+        final.classList.add("active");
+
+        return;
+
+    }
+
+    screens[current].classList.remove("hidden");
+
+    dots[current].classList.add("active");
+
+}
+
+
+/* =========================
+   RUNAWAY BUTTON
+========================= */
+
+function escapeButton(button){
+
+    const margin = 100;
+
+    const maxX =
+        window.innerWidth -
+        button.offsetWidth -
+        margin;
+
+    const maxY =
+        window.innerHeight -
+        button.offsetHeight -
+        margin;
+
+    const x =
+        Math.max(
+            80,
+            Math.random() * maxX
+        );
+
+    const y =
+        Math.max(
+            120,
+            Math.random() * maxY
+        );
+
+    button.style.position = "fixed";
+
+    button.style.left = x + "px";
+
+    button.style.top = y + "px";
+
+    showToast(
+        current === 2
+        ? "ABHAY'S PLAYLIST IS UNTOUCHABLE."
+        : "ACCESS DENIED."
+    );
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        },1500);
+
+}
+
+
+/* =========================
+   RESTART
+========================= */
+
+function restart(){
+
+    final.classList.remove("active");
+
+    screens.forEach((screen,index)=>{
+
+        screen.classList.toggle(
+            "hidden",
+            index !== 0
+        );
+
+    });
+
+    dots.forEach((dot,index)=>{
+
+        dot.classList.toggle(
+            "active",
+            index === 0
+        );
+
+    });
+
+    current = 0;
+
+    document
+    .querySelectorAll(".runaway")
+    .forEach(button=>{
+
+        button.style.position = "";
+        button.style.left = "";
+        button.style.top = "";
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
